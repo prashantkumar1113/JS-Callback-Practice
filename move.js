@@ -10,25 +10,46 @@ function move(element) {
         let direction = null;
         let x = left;
         let y = bottom;
-
         element.style.left = x + "px";
         element.style.bottom = y + "px";
 
         function moveCharacter() {
-            if (direction === "west") {
-                x = x - 1;
+            if (
+                x >= 0 &&
+                y >= 0 &&
+                x <= window.innerWidth - 50 &&
+                y <= window.innerHeight - 50
+            ) {
+                if (direction === "west") {
+                    x = x - 1;
+                }
+                if (direction === "north") {
+                    y = y + 1;
+                }
+                if (direction === "east") {
+                    x = x + 1;
+                }
+                if (direction === "south") {
+                    y = y - 1;
+                }
+                element.style.left = x + "px";
+                element.style.bottom = y + "px";
+                // console.log(`x=${x} y=${y}`);
+                // console.log(window.innerWidth + " " + window.innerHeight);
+            } else {
+                if (x < 0) {
+                    x = 0;
+                }
+                if (y < 0) {
+                    y = 0;
+                }
+                if (x > window.innerWidth - 50) {
+                    x = window.innerWidth - 50;
+                }
+                if (y > window.innerHeight - 50) {
+                    y = window.innerHeight - 50;
+                }
             }
-            if (direction === "north") {
-                y = y + 1;
-            }
-            if (direction === "east") {
-                x = x + 1;
-            }
-            if (direction === "south") {
-                y = y - 1;
-            }
-            element.style.left = x + "px";
-            element.style.bottom = y + "px";
         }
 
         setInterval(moveCharacter, 1);
@@ -48,13 +69,17 @@ function move(element) {
             if (e.key === "ArrowDown") {
                 direction = "south";
             }
-            // console.log("keydown direction " + direction);
-            callback(direction);
+            // console.log("callback " + typeof callback);
+            if (typeof callback === "function") {
+                callback(direction);
+            }
         });
 
         document.addEventListener("keyup", function (e) {
             direction = null;
-            callback(direction);
+            if (typeof callback === "function") {
+                callback(direction);
+            }
         });
     }
 
